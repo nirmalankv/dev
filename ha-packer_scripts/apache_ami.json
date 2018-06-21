@@ -1,0 +1,36 @@
+{
+    "variables": {
+      "ami_id": "ami-28e07e50",
+      "env": "DEV"
+    },
+ 
+    "builders": [{
+      "type": "amazon-ebs",
+      "region": "us-west-2",
+      "source_ami": "{{user `ami_id`}}",
+      "instance_type": "t2.micro",
+      "ssh_username": "ec2-user",
+      "ami_name": "HA_AMI-{{user `env` }}",
+      "tags": {
+          "Name": "HA_AMI-{{user `env` }}"
+ 
+        }
+    }],
+ 
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "demo-script.sh"
+      },
+      {
+        "type": "file",
+        "source": "/home/ec2-user/ha-demo/ha-index/index.html",
+        "destination": "/var/www/html/index.html"
+      },
+      {
+        "type": "file",
+        "source": "/home/ec2-user/ha-demo/ha-index/ha_bg.png",
+        "destination": "/var/www/html/ha_bg.png"
+      }
+]
+}
